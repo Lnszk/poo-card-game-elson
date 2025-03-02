@@ -3,6 +3,7 @@ public class Jogador
     public string Nome {get; }
     public int Energia {get; private set; }
     public int Vidas {get; private set; }
+    public List<Carta> Deck { get; private set; }  // 20 cartas, sendo 10 de ataque e 10 de defesa.
 
     // construtor
     public Jogador(string nome)
@@ -39,4 +40,13 @@ public class Jogador
         Vidas = Math.Min(30, this.Vidas + cartaDefesa.Vida);
     }
 
+    // Selecionar as cartas (escolher as cartas para compor seu deck)
+    public void SelecionarCarta(){
+
+    }
+
+    // Adicionar cartas ao deck
+    public void IniciarDeck(List<Carta> cartas) {
+        Deck.AddRange(cartas);
+    }
 }
