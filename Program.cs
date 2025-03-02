@@ -1,11 +1,26 @@
-﻿// Início do Jogo
+﻿public class Program {
+    public static void Main(string[] args) {
+        Game game = new Game();
+        game.Run();
+    }
+}
 
-CartaAtaque cartaAtaque04 = new CartaAtaque("Espada Flamejante", "Um corte envolto em chamas, causando queimaduras.", 3, 5);
-CartaDefesa cartaDefesa01 = new CartaDefesa("Poção de Cura", "Uma poção básica que recupera energia vital.", 2, 4);
-CartaAtaque cartaAtaque10 = new CartaAtaque("Lança Sombria", "Uma lança de energia negra atravessa o adversário.", 4, 6);
 
-Jogador heroi = new Jogador("Herói");
-Jogador vilao = new Jogador("Vilão");
+
+
+
+
+
+
+
+// Início do Jogo
+
+// CartaAtaque cartaAtaque04 = new CartaAtaque("Espada Flamejante", "Um corte envolto em chamas, causando queimaduras.", 3, 5);
+// CartaDefesa cartaDefesa01 = new CartaDefesa("Poção de Cura", "Uma poção básica que recupera energia vital.", 2, 4);
+// CartaAtaque cartaAtaque10 = new CartaAtaque("Lança Sombria", "Uma lança de energia negra atravessa o adversário.", 4, 6);
+
+// Jogador heroi = new Jogador("Herói");
+// Jogador vilao = new Jogador("Vilão");
 
 
 // Sua mão:
