@@ -78,6 +78,28 @@ public class Game {
 
     }
     public void Run() {
-        
+        while ((usuario.Vidas > 0) && (computador.Vidas > 0)) {
+            
+            Console.WriteLine("Sua mão: ");
+            for (int i=0; i<usuario.Deck.Count; i++) {
+                if (usuario.Deck[i] is CartaAtaque cartaAtaque) {
+                    Console.WriteLine($"{i+1}: {cartaAtaque.Nome} (Custo: {cartaAtaque.Energia}, Dano: {cartaAtaque.Dano})");
+                } else if (usuario.Deck[i] is CartaDefesa cartaDefesa) {
+                    Console.WriteLine($"{i+1}: {cartaDefesa.Nome} (Custo: {cartaDefesa.Energia}, Vida: {cartaDefesa.Vida})");
+                }
+            }
+
+            Console.WriteLine($"Escolha uma carta para jogar (1 a {usuario.Deck.Count})");
+            int escolha = Convert.ToInt32(Console.ReadLine()) - 1;
+            Carta cartaUsuario = usuario.SelecionarCarta(escolha);
+            
+            if (cartaUsuario is CartaAtaque cartaAtaqueEscolhida) {
+                Console.WriteLine($"{usuario.Nome} usou {cartaAtaqueEscolhida.Nome}, causando {cartaAtaqueEscolhida.Dano} de dano!");
+                Console.WriteLine($"{computador.Nome} - Vida: {computador.Vidas}");
+            } else if (cartaUsuario is CartaDefesa cartaDefesaEscolhida) {
+                Console.WriteLine($"{usuario.Nome} usou {cartaDefesaEscolhida.Nome}, recuperando {cartaDefesaEscolhida.Vida} de vida!");
+                Console.WriteLine($"{usuario.Nome} - Vida: {usuario.Vidas}");
+            }
+        }
     }
 }
