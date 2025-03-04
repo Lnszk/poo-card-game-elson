@@ -99,37 +99,56 @@ public class Game {
                 }
             }
 
-            Console.WriteLine($"Escolha uma carta para jogar (1 a {usuario.Deck.Count})");
-            int escolha = Convert.ToInt32(Console.ReadLine()) - 1;
-            Carta cartaUsuario = usuario.SelecionarCarta(escolha);
+            int escolha;
 
-            escolha = random.Next(computador.Deck.Count);
-            Carta cartaComputador = computador.SelecionarCarta(escolha);
-            // Console.WriteLine($"carta do computador: {cartaComputador.Nome}");
-            
-            if (cartaUsuario is CartaAtaque cartaAtaqueUsuario) {
-                Console.WriteLine($"{usuario.Nome} usou {cartaAtaqueUsuario.Nome}, causando {cartaAtaqueUsuario.Dano} de dano!");
-                cartaAtaqueUsuario.Usar(usuario, computador);
-                if (isFimJogo) {
-                    break;
+            if (usuario.Deck.Any(c => c.Energia <= usuario.Energia)) {
+                while (true) {
+                    Console.WriteLine($"Escolha uma carta para jogar (1 a {usuario.Deck.Count})");
+                    escolha = Convert.ToInt32(Console.ReadLine()) - 1;
+                    if (usuario.Deck[escolha].Energia <= usuario.Energia) {
+                        break;
+                    }  
+                    Console.WriteLine($"{usuario.Nome} não tem energia suficiente para jogar essa carta.");                  
                 }
-            } else if (cartaUsuario is CartaDefesa cartaDefesaUsuario) {
-                Console.WriteLine($"{usuario.Nome} usou {cartaDefesaUsuario.Nome}, recuperando {cartaDefesaUsuario.Vida} de vida!");
-                cartaDefesaUsuario.Usar(usuario, usuario);
+                Carta cartaUsuario = usuario.SelecionarCarta(escolha);
+                if (cartaUsuario is CartaAtaque cartaAtaqueUsuario) {
+                        Console.WriteLine($"{usuario.Nome} usou {cartaAtaqueUsuario.Nome}, causando {cartaAtaqueUsuario.Dano} de dano!");
+                        cartaAtaqueUsuario.Usar(usuario, computador);
+                        if (isFimJogo) {
+                            break;
+                        }
+                    } else if (cartaUsuario is CartaDefesa cartaDefesaUsuario) {
+                        Console.WriteLine($"{usuario.Nome} usou {cartaDefesaUsuario.Nome}, recuperando {cartaDefesaUsuario.Vida} de vida!");
+                        cartaDefesaUsuario.Usar(usuario, usuario);
+                    }
+                    cartas.Add(cartaUsuario);
+            } else {
+                Console.WriteLine($"{usuario.Nome} não tem energia suficiente para jogar nenhuma carta.");
             }
-            cartas.Add(cartaUsuario);
-            
-            if (cartaComputador is CartaAtaque cartaAtaqueComputador) {
-                Console.WriteLine($"{computador.Nome} usou {cartaAtaqueComputador.Nome}, causando {cartaAtaqueComputador.Dano} de dano!");
-                cartaAtaqueComputador.Usar(computador, usuario);
-                if (isFimJogo) {
-                    break;
+
+            if (computador.Deck.Any(c => c.Energia <= computador.Energia)) {
+                while (true) {
+                    escolha = random.Next(0, computador.Deck.Count);
+                    if (computador.Deck[escolha].Energia <= computador.Energia) {
+                        break;
+                    }  
+                    Console.WriteLine($"{computador.Nome} não tem energia suficiente para jogar essa carta.");                  
                 }
-            } else if (cartaComputador is CartaDefesa cartaDefesaComputador) {
-                Console.WriteLine($"{computador.Nome} usou {cartaDefesaComputador.Nome}, recuperando {cartaDefesaComputador.Vida} de vida!");
-                cartaDefesaComputador.Usar(computador, computador);
+                Carta cartaComputador = computador.SelecionarCarta(escolha);
+                if (cartaComputador is CartaAtaque cartaAtaqueComputador) {
+                        Console.WriteLine($"{computador.Nome} usou {cartaAtaqueComputador.Nome}, causando {cartaAtaqueComputador.Dano} de dano!");
+                        cartaAtaqueComputador.Usar(computador, usuario);
+                        if (isFimJogo) {
+                            break;
+                        }
+                    } else if (cartaComputador is CartaDefesa cartaDefesaComputador) {
+                        Console.WriteLine($"{computador.Nome} usou {cartaDefesaComputador.Nome}, recuperando {cartaDefesaComputador.Vida} de vida!");
+                        cartaDefesaComputador.Usar(computador, computador);
+                    }
+                    cartas.Add(cartaComputador);
+            } else {
+                Console.WriteLine($"{computador.Nome} não tem energia suficiente para jogar nenhuma carta.");
             }
-            cartas.Add(cartaComputador);
 
             Console.WriteLine("Final da rodada - ambos os jogadores têm 2 de energia restaurados.");
             usuario.RestaurarEnergia();
@@ -146,7 +165,6 @@ public class Game {
                 computador.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaDefesa)));
             }
 
-            
         }
     }
 }
