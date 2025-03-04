@@ -25,6 +25,8 @@ public class Game {
     public static void Vencedor(Jogador jogador, Jogador oponente) {
         Console.WriteLine($"{oponente.Nome} perdeu.");
         Console.WriteLine($"O vencedor é {jogador.Nome}!");
+        Console.WriteLine($"{jogador.Nome} - Vida: {jogador.Vidas} | Energia: {jogador.Energia}");
+        Console.WriteLine($"{oponente.Nome} - Vida: {oponente.Vidas} | Energia: {oponente.Energia}");
         isFimJogo = true;
     }
 
@@ -115,6 +117,7 @@ public class Game {
                 Console.WriteLine($"{usuario.Nome} usou {cartaDefesaUsuario.Nome}, recuperando {cartaDefesaUsuario.Vida} de vida!");
                 cartaDefesaUsuario.Usar(usuario, usuario);
             }
+            cartas.Add(cartaUsuario);
             
             if (cartaComputador is CartaAtaque cartaAtaqueComputador) {
                 Console.WriteLine($"{computador.Nome} usou {cartaAtaqueComputador.Nome}, causando {cartaAtaqueComputador.Dano} de dano!");
@@ -126,6 +129,7 @@ public class Game {
                 Console.WriteLine($"{computador.Nome} usou {cartaDefesaComputador.Nome}, recuperando {cartaDefesaComputador.Vida} de vida!");
                 cartaDefesaComputador.Usar(computador, computador);
             }
+            cartas.Add(cartaComputador);
 
             Console.WriteLine("Final da rodada - ambos os jogadores têm 2 de energia restaurados.");
             usuario.RestaurarEnergia();
@@ -134,8 +138,12 @@ public class Game {
             Console.WriteLine($"{usuario.Nome} - Vida: {usuario.Vidas} | Energia: {usuario.Energia}");
             Console.WriteLine($"{computador.Nome} - Vida: {computador.Vidas} | Energia: {computador.Energia}");
             
-            if ((usuario.Deck.Count == 0)) && (computador.Deck.Count == 0)) {
-                // redistribuir cartas como no início
+            if ((usuario.Deck.Count == 0) && (computador.Deck.Count == 0)) {
+                usuario.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaAtaque)));
+                usuario.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaDefesa)));
+
+                computador.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaAtaque)));
+                computador.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaDefesa)));
             }
 
             
