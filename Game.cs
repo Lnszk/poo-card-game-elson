@@ -2,6 +2,23 @@ public class Game {
     private List<Carta> cartas;
     private Jogador usuario;
     private Jogador computador;
+    private static Random random = new Random();
+
+    public List<Carta> SelecionarCartasRandom(int numeroCartas, Type tipoCarta) {
+        List<Carta> selecaoCartas = new List<Carta>();
+        List<Carta> cartasFiltradas = cartas.Where(c => c.GetType() == tipoCarta).ToList();
+        if (cartasFiltradas.Count == 0) {
+            throw new InvalidOperationException("Não há carta desse tipo.");
+        }
+        for(int i=0; i<numeroCartas; i++){
+            int index = random.Next(cartasFiltradas.Count);
+            selecaoCartas.Add(cartasFiltradas[index]);
+            cartas.Remove(cartasFiltradas[index]);
+            cartasFiltradas.RemoveAt(index);
+        }
+        return selecaoCartas;
+    }
+
 
     public Game() {
         cartas = new List<Carta>();
@@ -48,45 +65,19 @@ public class Game {
 
         usuario = new Jogador("Herói");
         computador = new Jogador("Vilão");
-        
+
+        Console.WriteLine("Início do Jogo");
+        Console.WriteLine($"Jogador ({usuario.Nome}) - Vida: {usuario.Vidas} | Energia: {usuario.Energia}");
+        Console.WriteLine($"Computador ({computador.Nome}) - Vida: {computador.Vidas} | Energia: {computador.Energia}");
+
+        usuario.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaAtaque)));
+        usuario.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaDefesa)));
+
+        computador.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaAtaque)));
+        computador.IniciarDeck(SelecionarCartasRandom(10, typeof(CartaDefesa)));
 
     }
     public void Run() {
         
     }
 }
-
-
-//    public static void Main(string[] args) {
-//         Jogador jogador1 = new Jogador("Jogador 1");
-//         Jogador jogador2 = new Jogador("Jogador 2");
-
-//         List<Carta> cartas = new List<Carta> {
-//             new CartaAtaque("Ataque 1", "Descrição do Ataque 1", 2, 5),
-//             new CartaAtaque("Ataque 2", "Descrição do Ataque 2", 3, 7),
-//             new CartaAtaque("Ataque 3", "Descrição do Ataque 3", 4, 9),
-//             new CartaDefesa("Defesa 1", "Descrição da Defesa 1", 2, 5),
-//             new CartaDefesa("Defesa 2", "Descrição da Defesa 2", 3, 7),
-//             new CartaDefesa("Defesa 3", "Descrição da Defesa 3", 4, 9)
-//         };
-
-//         jogador1.IniciarDeck(cartas);
-//         jogador2.IniciarDeck(cartas);
-
-//         while (jogador1.Vidas > 0 && jogador2.Vidas > 0) {
-//             Carta cartaJogador1 = jogador1.SelecionarCarta(0);
-//             Carta cartaJogador2 = jogador2.SelecionarCarta(0);
-
-//             cartaJogador1.Usar(jogador1, jogador2);
-//             cartaJogador2.Usar(jogador2, jogador1);
-
-//             Console.WriteLine($"Vidas Jogador 1: {jogador1.Vidas}");
-//             Console.WriteLine($"Vidas Jogador 2: {jogador2.Vidas}");
-//         }
-
-//         if (jogador1.Vidas == 0) {
-//             Console.WriteLine("Jogador 2 venceu!");
-//         } else {
-//             Console.WriteLine("Jogador 1 venceu!");
-//         }
-//     }

@@ -9,10 +9,6 @@
 
 
 
-
-
-
-
 // Início do Jogo
 
 // CartaAtaque cartaAtaque04 = new CartaAtaque("Espada Flamejante", "Um corte envolto em chamas, causando queimaduras.", 3, 5);
