@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class Game {
     private List<Carta> cartas;
     private Jogador usuario;
     private Jogador computador;
+    private static Boolean isFimJogo = false;
     private static Random random = new Random();
 
     public List<Carta> SelecionarCartasRandom(int numeroCartas, Type tipoCarta) {
@@ -19,6 +22,11 @@ public class Game {
         return selecaoCartas;
     }
 
+    public static void Vencedor(Jogador jogador, Jogador oponente) {
+        Console.WriteLine($"{oponente.Nome} perdeu.");
+        Console.WriteLine($"O vencedor é {jogador.Nome}!");
+        isFimJogo = true;
+    }
 
     public Game() {
         cartas = new List<Carta>();
@@ -92,14 +100,45 @@ public class Game {
             Console.WriteLine($"Escolha uma carta para jogar (1 a {usuario.Deck.Count})");
             int escolha = Convert.ToInt32(Console.ReadLine()) - 1;
             Carta cartaUsuario = usuario.SelecionarCarta(escolha);
+
+            escolha = random.Next(computador.Deck.Count);
+            Carta cartaComputador = computador.SelecionarCarta(escolha);
+            // Console.WriteLine($"carta do computador: {cartaComputador.Nome}");
             
-            if (cartaUsuario is CartaAtaque cartaAtaqueEscolhida) {
-                Console.WriteLine($"{usuario.Nome} usou {cartaAtaqueEscolhida.Nome}, causando {cartaAtaqueEscolhida.Dano} de dano!");
-                Console.WriteLine($"{computador.Nome} - Vida: {computador.Vidas}");
-            } else if (cartaUsuario is CartaDefesa cartaDefesaEscolhida) {
-                Console.WriteLine($"{usuario.Nome} usou {cartaDefesaEscolhida.Nome}, recuperando {cartaDefesaEscolhida.Vida} de vida!");
-                Console.WriteLine($"{usuario.Nome} - Vida: {usuario.Vidas}");
+            if (cartaUsuario is CartaAtaque cartaAtaqueUsuario) {
+                Console.WriteLine($"{usuario.Nome} usou {cartaAtaqueUsuario.Nome}, causando {cartaAtaqueUsuario.Dano} de dano!");
+                cartaAtaqueUsuario.Usar(usuario, computador);
+                if (isFimJogo) {
+                    break;
+                }
+            } else if (cartaUsuario is CartaDefesa cartaDefesaUsuario) {
+                Console.WriteLine($"{usuario.Nome} usou {cartaDefesaUsuario.Nome}, recuperando {cartaDefesaUsuario.Vida} de vida!");
+                cartaDefesaUsuario.Usar(usuario, usuario);
             }
+            
+            if (cartaComputador is CartaAtaque cartaAtaqueComputador) {
+                Console.WriteLine($"{computador.Nome} usou {cartaAtaqueComputador.Nome}, causando {cartaAtaqueComputador.Dano} de dano!");
+                cartaAtaqueComputador.Usar(computador, usuario);
+                if (isFimJogo) {
+                    break;
+                }
+            } else if (cartaComputador is CartaDefesa cartaDefesaComputador) {
+                Console.WriteLine($"{computador.Nome} usou {cartaDefesaComputador.Nome}, recuperando {cartaDefesaComputador.Vida} de vida!");
+                cartaDefesaComputador.Usar(computador, computador);
+            }
+
+            Console.WriteLine("Final da rodada - ambos os jogadores têm 2 de energia restaurados.");
+            usuario.RestaurarEnergia();
+            computador.RestaurarEnergia();
+
+            Console.WriteLine($"{usuario.Nome} - Vida: {usuario.Vidas} | Energia: {usuario.Energia}");
+            Console.WriteLine($"{computador.Nome} - Vida: {computador.Vidas} | Energia: {computador.Energia}");
+            
+            if ((usuario.Deck.Count == 0)) && (computador.Deck.Count == 0)) {
+                // redistribuir cartas como no início
+            }
+
+            
         }
     }
 }

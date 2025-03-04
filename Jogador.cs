@@ -24,8 +24,6 @@ public class Jogador
 
     public void ReceberDano(CartaAtaque carta) {
         Vidas = Math.Max(0, this.Vidas - carta.Dano);
-
-        // Se Vidas == 0, o jogador perdeu. (condição de vitória).
     }
 
     public void RestaurarVida(Carta carta) {
