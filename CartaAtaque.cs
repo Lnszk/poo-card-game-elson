@@ -11,8 +11,5 @@ public class CartaAtaque : Carta
     {
         jogador.ConsumirEnergia(this);
         oponente.ReceberDano(this);
-        if (oponente.Vidas == 0) {
-            Game.Vencedor(jogador, oponente);
-        }
     }
 }

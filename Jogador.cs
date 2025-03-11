@@ -23,7 +23,7 @@ public class Jogador
     }
 
     public void ReceberDano(CartaAtaque carta) {
-        Vidas = Math.Max(0, this.Vidas - carta.Dano);
+        Vidas = Math.Max(0, this.Vidas - carta.Dano);   
     }
 
     public void RestaurarVida(Carta carta) {
