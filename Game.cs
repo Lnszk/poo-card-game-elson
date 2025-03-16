@@ -6,9 +6,14 @@ public class Game {
     private Jogador computador;
     private Random random = new Random();
 
-    public List<Carta> SelecionarCartasRandom(int numeroCartas, Type tipoCarta) {
+    private List<Carta> SelecionarCartasRandom(int numeroCartas, Type tipoCarta) {
         List<Carta> selecaoCartas = new List<Carta>();
-        List<Carta> cartasFiltradas = cartas.Where(c => c.GetType() == tipoCarta).ToList();
+        // List<Carta> cartasFiltradas = cartas.Where(c => c.GetType() == tipoCarta).ToList();
+        List<Carta> cartasFiltradas = new List<Carta>();
+        foreach (Carta carta in cartas) {
+            if (carta.GetType() == tipoCarta)
+            cartasFiltradas.Add(carta);
+        }
         if (cartasFiltradas.Count == 0) {
             throw new InvalidOperationException("Não há carta desse tipo.");
         }
@@ -21,7 +26,16 @@ public class Game {
         return selecaoCartas;
     }
 
-    public void JogarCarta(Jogador jogador, Jogador oponente, int escolha) {
+    // jogador.Deck.Any(c => c.Energia <= jogador.Energia)
+    private bool TemEnergiaSuficiente(Jogador jogador) {
+        foreach(Carta carta in jogador.Deck) {
+            if(carta.Energia <= jogador.Energia)
+                return true;
+        }
+        return false;
+    }
+
+    private void JogarCarta(Jogador jogador, Jogador oponente, int escolha) {
         Carta cartaEscolhida = jogador.SelecionarCarta(escolha);
         if (cartaEscolhida is CartaAtaque cartaEscolhidaAtaque) {
             cartaEscolhidaAtaque.Usar(jogador, oponente);
@@ -33,7 +47,7 @@ public class Game {
         cartas.Add(cartaEscolhida);
     }
 
-    public static void MostrarVencedor(Jogador jogador, Jogador oponente) {
+    private static void MostrarVencedor(Jogador jogador, Jogador oponente) {
         Console.WriteLine($"{oponente.Nome} perdeu.");
         Console.WriteLine($"O vencedor é {jogador.Nome}!");
         Console.WriteLine($"{jogador.Nome} - Vida: {jogador.Vidas} | Energia: {jogador.Energia}");
@@ -114,7 +128,7 @@ public class Game {
 
             int escolha;
 
-            if (usuario.Deck.Any(c => c.Energia <= usuario.Energia)) {
+            if (TemEnergiaSuficiente(usuario)) {
                 while (true) {
                     Console.WriteLine($"Escolha uma carta para jogar (1 a {usuario.Deck.Count})");
                     escolha = Convert.ToInt32(Console.ReadLine()) - 1;
@@ -132,7 +146,7 @@ public class Game {
                 Console.WriteLine($"{usuario.Nome} não tem energia suficiente para jogar nenhuma carta.");
             }
 
-            if (computador.Deck.Any(c => c.Energia <= computador.Energia)) {
+            if (TemEnergiaSuficiente(computador)) {
                 while (true) {
                     escolha = random.Next(0, computador.Deck.Count);
                     if (computador.Deck[escolha].Energia <= computador.Energia) {
